@@ -8,7 +8,7 @@ export const profile = {
   email: 'immaxvel@gmail.com',
   linkedin: 'https://linkedin.com/in/immaxvel',
   github: 'https://github.com/ImmaxvelSolbeg',
-  cvPath: '/cv.pdf',
+  cvPath: `${import.meta.env.BASE_URL}cv.pdf`,
   summary:
     'Frontend Engineer with 5+ years of commercial experience specializing in React, TypeScript, and the modern JavaScript ecosystem. ' +
     'Delivered scalable web applications, including e-commerce platforms and complex single-page applications. ' +

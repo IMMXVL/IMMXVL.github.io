@@ -6,7 +6,7 @@ export function Experience() {
   return (
     <section id="experience" className="section" aria-labelledby="experience-title">
       <div className="container">
-        <SectionHeading id="experience-title" index="01" title="Experience" />
+        <SectionHeading id="experience-title" title="Experience" />
         <ol className="timeline">
           {experience.map((job, index) => {
             const isCurrent = job.period.includes('Present')

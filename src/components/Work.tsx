@@ -15,7 +15,6 @@ export function Work() {
       <div className="container">
         <SectionHeading
           id="work-title"
-          index="02"
           title="Selected work"
           intro="Case studies without client names or code. Details are shared on request."
         />
@@ -29,9 +28,6 @@ export function Work() {
             >
               <article className="card case-card" onPointerMove={trackPointer}>
                 <div className="case-card__top">
-                  <span className="case-card__index" aria-hidden="true">
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
                   <h3>{item.title}</h3>
                   <p className="case-card__context">{item.context}</p>
                 </div>

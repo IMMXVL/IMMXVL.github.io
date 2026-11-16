@@ -5,7 +5,7 @@ export function Education() {
   return (
     <section id="education" className="section" aria-labelledby="education-title">
       <div className="container">
-        <SectionHeading id="education-title" index="04" title="Education and languages" />
+        <SectionHeading id="education-title" title="Education and languages" />
         <div className="two-up">
           <div className="card info-card" data-reveal>
             <p className="info-card__label">Education</p>

@@ -643,14 +643,6 @@ h3 {
   margin-bottom: clamp(2rem, 4vw, 3rem);
 }
 
-.section-heading__index {
-  margin-bottom: 0.6rem;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  color: var(--accent-text);
-  letter-spacing: 0.08em;
-}
-
 .section-heading__intro {
   margin-top: 0.85rem;
   max-width: 60ch;
@@ -775,7 +767,6 @@ h3 {
   display: grid;
   gap: 1.5rem;
   overflow: hidden;
-  container-type: inline-size;
 }
 
 .case-card::before {
@@ -804,14 +795,6 @@ h3 {
 
 .case-card > * {
   position: relative;
-}
-
-.case-card__index {
-  display: block;
-  margin-bottom: 0.75rem;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  color: var(--accent-text);
 }
 
 .case-card h3 {
@@ -861,13 +844,13 @@ h3 {
   font-weight: 500;
 }
 
-@container (min-width: 620px) {
-  .case-card__body {
+@media (min-width: 760px) {
+  .bento > .bento__cell:first-child .case-card__body {
     grid-template-columns: 1fr 1fr;
     column-gap: 2rem;
   }
 
-  .case-card__decisions {
+  .bento > .bento__cell:first-child .case-card__decisions {
     grid-column: 1 / -1;
   }
 }

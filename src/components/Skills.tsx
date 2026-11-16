@@ -14,7 +14,7 @@ export function Skills() {
   return (
     <section id="skills" className="section" aria-labelledby="skills-title">
       <div className="container">
-        <SectionHeading id="skills-title" index="03" title="Skills" />
+        <SectionHeading id="skills-title" title="Skills" />
 
         <div className="filters" role="group" aria-label="Filter skills" data-reveal>
           {filters.map((label) => (

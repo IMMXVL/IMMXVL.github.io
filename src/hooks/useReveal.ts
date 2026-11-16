@@ -7,8 +7,8 @@ export function useReveal() {
     if (typeof IntersectionObserver === 'undefined' || prefersReducedMotion()) return
 
     const root = document.documentElement
-    const elements = document.querySelectorAll<HTMLElement>('[data-reveal]')
-    root.classList.add('reveal-ready')
+    const elements = [...document.querySelectorAll<HTMLElement>('[data-reveal]')]
+    const viewBottom = window.innerHeight
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -18,10 +18,17 @@ export function useReveal() {
           observer.unobserve(entry.target)
         }
       },
-      { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
+      { rootMargin: '0px 0px -40px 0px', threshold: 0 },
     )
 
-    elements.forEach((element) => observer.observe(element))
+    for (const element of elements) {
+      const rect = element.getBoundingClientRect()
+      // A zero-height box never intersects, so it must stay visible.
+      if (rect.height === 0 || rect.top < viewBottom) element.classList.add('is-visible')
+      else observer.observe(element)
+    }
+
+    root.classList.add('reveal-ready')
 
     return () => {
       observer.disconnect()

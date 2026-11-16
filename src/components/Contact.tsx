@@ -9,9 +9,6 @@ export function Contact() {
     <section id="contact" className="section section--last" aria-labelledby="contact-title">
       <div className="container">
         <div className="contact-card" data-reveal>
-          <p className="section-heading__index" aria-hidden="true">
-            05
-          </p>
           <h2 id="contact-title">Contact</h2>
           <p className="contact-card__text">
             Open to frontend roles with React and TypeScript. The easiest way to reach me is by email.
