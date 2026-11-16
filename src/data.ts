@@ -7,13 +7,13 @@ export const profile = {
   location: 'Minsk, Belarus',
   email: 'immaxvel@gmail.com',
   linkedin: 'https://linkedin.com/in/immaxvel',
-  github: 'https://github.com/ImmaxvelSolbeg',
+  github: 'https://github.com/IMMXVL',
   cvPath: `${import.meta.env.BASE_URL}cv.pdf`,
   summary:
     'Frontend Engineer with 5+ years of commercial experience specializing in React, TypeScript, and the modern JavaScript ecosystem. ' +
     'Delivered scalable web applications, including e-commerce platforms and complex single-page applications. ' +
     'Focused on frontend architecture, performance (Core Web Vitals), reusable component libraries, and accessible UI. ' +
-    'Works closely with designers and product teams and mentors junior developers.',
+    'Works closely with designers and product teams.',
   note: 'Commercial projects are private and covered by NDA. Details are shared on request.',
   // Visible to anyone, including the current employer. Set to null to hide the badge.
   availability: 'Open to new frontend roles' as string | null,
@@ -32,7 +32,7 @@ export const skillGroups: { label: string; items: string[] }[] = [
   },
   {
     label: 'Frameworks and libraries',
-    items: ['React', 'Redux', 'Next.js (basic)', 'Vue.js (basic)'],
+    items: ['React', 'Redux'],
   },
   {
     label: 'UI',
@@ -59,72 +59,49 @@ export const experience = [
     place: 'Minsk / Remote',
     period: 'September 2021 – Present',
     bullets: [
-      'Developed and maintained scalable frontend applications with React and TypeScript across several production projects, including e-commerce platforms, social networks, and complex SPAs.',
-      'Improved application performance and Core Web Vitals through code splitting, lazy loading, rendering optimization, and state management.',
-      'Built and maintained reusable component libraries to keep UI consistent across projects.',
-      'Integrated REST APIs and Swagger-based backend services, including error handling, authentication flows, and data validation.',
-      'Worked with designers and product teams on accessible interfaces using Material UI and Ant Design.',
-      'Took part in architecture discussions, sprint planning, effort estimation, code reviews, and technical decisions.',
-      'Developed modular web components and integrated third-party services within the Shopify ecosystem, including paid membership solutions.',
-    ],
-  },
-  {
-    role: 'Trainee Frontend Developer',
-    company: 'Solbeg',
-    place: 'Remote',
-    period: 'June 2021 – August 2021',
-    bullets: [
-      'First commercial experience in frontend development with JavaScript, HTML, CSS, and React.',
-      'Worked with senior developers, completed assigned tasks independently, and followed development best practices.',
-    ],
-  },
-  {
-    role: 'Frontend Development Trainee',
-    company: 'IT Academy',
-    place: 'Minsk',
-    period: 'February 2020 – March 2021',
-    bullets: [
-      'Intensive frontend program focused on JavaScript, React, HTML, CSS, and modern web development practices.',
-      'Built practical training projects.',
+      'Built and maintained production frontends in React and TypeScript: e-commerce, including Shopify, a social product, and complex single-page applications.',
+      'Improved loading and interaction with code splitting, lazy loading, and tighter rendering and state updates. Core Web Vitals on these projects got better.',
+      'Built a shared component library on Material UI and Ant Design so the interface stayed consistent and new screens reused the same components.',
+      'Integrated REST APIs described in Swagger, including errors, authentication, and validation. Took part in architecture discussions, estimation, and code reviews.',
     ],
   },
 ]
 
-// Case studies are written without client names and without code.
-// Each one describes the problem, my role, the decisions, and the outcome as stated in the CV.
+// Cases are written from the CV. No client name, no code, no metrics that are not already stated.
 export const cases = [
   {
-    title: 'Performance on production SPAs',
-    context: 'E-commerce platforms, social networks, and complex single-page applications.',
-    problem: 'Large React applications needed faster loading and smoother interaction.',
-    role: 'Frontend developer on several production projects.',
+    title: 'Faster loading on a large React app',
+    context: 'A production single-page application. The product name stays under NDA.',
+    problem:
+      'The first load pulled in too much of the app, and heavy screens re-rendered more than the interaction needed.',
+    role: 'Frontend developer responsible for the performance work.',
     decisions: [
-      'Applied code splitting and lazy loading.',
-      'Optimized rendering and state management.',
+      'Split the app by route and feature and lazy-loaded those parts instead of shipping them in the first bundle.',
+      'Found the screens that re-rendered too often and narrowed how state updates reached them.',
     ],
-    outcome: 'Improved Core Web Vitals on production projects.',
+    outcome: 'Core Web Vitals on the production app improved.',
   },
   {
     title: 'Reusable component library',
     context: 'Several frontend projects built on Material UI and Ant Design.',
     problem: 'Similar UI was rebuilt for each feature, and the interface drifted between projects.',
-    role: 'Built and maintained reusable components and worked with designers on accessible interfaces.',
+    role: 'Built and maintained the shared components and worked with designers on accessible interfaces.',
     decisions: [
       'Moved repeated UI into shared components.',
       'Used Material UI and Ant Design as the base and kept the visual style consistent.',
     ],
-    outcome: 'Reduced development time for new features and kept the UI consistent across projects.',
+    outcome: 'New features reused the same components, and the UI stayed consistent across projects.',
   },
   {
     title: 'API integration with authentication and validation',
     context: 'Products that depend on REST APIs described with Swagger.',
-    problem: 'Frontend screens break when API errors, authentication, or unexpected data are not handled.',
+    problem: 'Screens break when API errors, authentication, or unexpected data are not handled.',
     role: 'Integrated backend services into the frontend.',
     decisions: [
-      'Added error handling to API integration.',
-      'Implemented authentication flows and data validation.',
+      'Added error handling to every API call.',
+      'Implemented authentication flows and data validation before data reaches the UI.',
     ],
-    outcome: 'Reliable data flow between the frontend and backend services.',
+    outcome: 'A reliable data flow between the frontend and backend services.',
   },
 ]
 
