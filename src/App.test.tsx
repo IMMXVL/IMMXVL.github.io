@@ -1,7 +1,12 @@
-import { render, screen, within } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { act, fireEvent, render, screen, within } from '@testing-library/react'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 import { cases, experience, profile } from './data'
+
+afterEach(() => {
+  delete document.documentElement.dataset.theme
+  localStorage.clear()
+})
 
 describe('App', () => {
   it('shows the name as the main heading', () => {
@@ -22,10 +27,10 @@ describe('App', () => {
   it('renders every job from the experience data', () => {
     render(<App />)
     const section = screen.getByRole('region', { name: 'Experience' })
-    const items = within(section).getAllByRole('listitem')
-    expect(items.length).toBeGreaterThan(0)
     for (const job of experience) {
-      expect(within(section).getByRole('heading', { name: new RegExp(job.company) })).toBeInTheDocument()
+      expect(
+        within(section).getByRole('heading', { name: new RegExp(job.company) }),
+      ).toBeInTheDocument()
     }
   })
 
@@ -40,5 +45,66 @@ describe('App', () => {
   it('has a skip link to the main content', () => {
     render(<App />)
     expect(screen.getByRole('link', { name: 'Skip to content' })).toHaveAttribute('href', '#main')
+  })
+})
+
+describe('theme toggle', () => {
+  it('switches between dark and light and remembers the choice', () => {
+    render(<App />)
+    fireEvent.click(screen.getByRole('button', { name: 'Switch to light theme' }))
+
+    expect(document.documentElement.dataset.theme).toBe('light')
+    expect(localStorage.getItem('theme')).toBe('light')
+    expect(screen.getByRole('button', { name: 'Switch to dark theme' })).toBeInTheDocument()
+  })
+})
+
+describe('mobile menu', () => {
+  it('opens with the button and closes with Escape', () => {
+    render(<App />)
+    const button = screen.getByRole('button', { name: 'Open menu' })
+    expect(button).toHaveAttribute('aria-expanded', 'false')
+
+    fireEvent.click(button)
+    expect(button).toHaveAttribute('aria-expanded', 'true')
+    expect(button).toHaveAccessibleName('Close menu')
+
+    fireEvent.keyDown(document, { key: 'Escape' })
+    expect(button).toHaveAttribute('aria-expanded', 'false')
+    expect(button).toHaveFocus()
+  })
+})
+
+describe('skills filter', () => {
+  it('shows only the selected group', () => {
+    render(<App />)
+    const section = screen.getByRole('region', { name: 'Skills' })
+    const tools = within(section).getByRole('button', { name: 'Tools' })
+
+    fireEvent.click(tools)
+
+    expect(tools).toHaveAttribute('aria-pressed', 'true')
+    expect(within(section).getByText('Docker')).toBeInTheDocument()
+    expect(within(section).queryByText('Material UI')).not.toBeInTheDocument()
+    expect(within(section).getByText(/skills in Tools/)).toBeInTheDocument()
+  })
+})
+
+describe('copy email', () => {
+  it('copies the email and confirms it', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText },
+      configurable: true,
+    })
+
+    render(<App />)
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'Copy email' }))
+    })
+
+    expect(writeText).toHaveBeenCalledWith(profile.email)
+    expect(screen.getByRole('button', { name: 'Copied' })).toBeInTheDocument()
+    expect(screen.getByRole('status')).toHaveTextContent('Email copied to clipboard')
   })
 })

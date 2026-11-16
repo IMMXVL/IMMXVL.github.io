@@ -3,11 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta
       name="description"
       content="Maxim Velichko, Frontend Engineer with 5+ years of commercial experience in React and TypeScript. Minsk, Belarus."
     />
+    <meta name="theme-color" content="#0a0b10" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f6f6fa" media="(prefers-color-scheme: light)" />
     <meta property="og:title" content="Maxim Velichko — Frontend Engineer (React, TypeScript)" />
     <meta
       property="og:description"
@@ -15,6 +17,19 @@
     />
     <meta property="og:type" content="website" />
     <title>Maxim Velichko — Frontend Engineer</title>
+    <script>
+      // Sets the theme before first paint to avoid a flash. Keep in sync with src/hooks/useTheme.ts.
+      ;(function () {
+        var theme
+        try {
+          theme = localStorage.getItem('theme')
+        } catch (error) {}
+        if (theme !== 'light' && theme !== 'dark') {
+          theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+        }
+        document.documentElement.dataset.theme = theme
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

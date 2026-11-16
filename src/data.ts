@@ -15,7 +15,15 @@ export const profile = {
     'Focused on frontend architecture, performance (Core Web Vitals), reusable component libraries, and accessible UI. ' +
     'Works closely with designers and product teams and mentors junior developers.',
   note: 'Commercial projects are private and covered by NDA. Details are shared on request.',
+  // Visible to anyone, including the current employer. Set to null to hide the badge.
+  availability: 'Open to new frontend roles' as string | null,
 }
+
+export const highlights = [
+  { value: '5+', label: 'years of commercial experience' },
+  { value: 'React + TS', label: 'core stack in production' },
+  { value: 'Since 2021', label: 'shipping e-commerce, social and SPA products' },
+]
 
 export const skillGroups: { label: string; items: string[] }[] = [
   {
