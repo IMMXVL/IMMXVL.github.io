@@ -1,3 +1,16 @@
+/* Registered so the cursor glow can ease between positions. */
+@property --spot-x {
+  syntax: '<length-percentage>';
+  inherits: true;
+  initial-value: 50%;
+}
+
+@property --spot-y {
+  syntax: '<length-percentage>';
+  inherits: true;
+  initial-value: 40%;
+}
+
 /* Theme tokens. Dark is the default; index.html sets data-theme before first paint. */
 
 :root {
@@ -18,7 +31,7 @@
   --on-accent: #0a0b10;
   --gradient: linear-gradient(120deg, var(--accent-1), var(--accent-2));
   --header-bg: rgb(10 11 16 / 0.68);
-  --spot: rgb(167 139 250 / 0.14);
+  --spot: rgb(167 139 250 / 0.28);
   --shadow: 0 18px 50px -24px rgb(0 0 0 / 0.75);
   --blob-opacity: 0.55;
   --grid-line: rgb(255 255 255 / 0.05);
@@ -60,7 +73,7 @@
   --accent-text: #5124c9;
   --on-accent: #ffffff;
   --header-bg: rgb(246 246 250 / 0.72);
-  --spot: rgb(91 47 214 / 0.08);
+  --spot: rgb(91 47 214 / 0.16);
   --shadow: 0 18px 50px -28px rgb(40 24 110 / 0.35);
   --blob-opacity: 0.28;
   --grid-line: rgb(17 19 27 / 0.05);
@@ -660,7 +673,9 @@ h3 {
   transition:
     border-color 0.25s,
     transform 0.35s var(--ease-out),
-    box-shadow 0.35s var(--ease-out);
+    box-shadow 0.35s var(--ease-out),
+    --spot-x 0.7s var(--ease-out),
+    --spot-y 0.7s var(--ease-out);
 }
 
 .card:hover {
@@ -766,26 +781,6 @@ h3 {
 .case-card {
   display: grid;
   gap: 1.5rem;
-  overflow: hidden;
-}
-
-.case-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(
-    420px circle at var(--spot-x, 50%) var(--spot-y, 0%),
-    var(--spot),
-    transparent 45%
-  );
-  opacity: 0;
-  transition: opacity 0.3s;
-  pointer-events: none;
-}
-
-.case-card:hover::before {
-  opacity: 1;
 }
 
 .case-card:hover {
@@ -793,8 +788,39 @@ h3 {
   box-shadow: var(--shadow);
 }
 
-.case-card > * {
+/* Cursor glow, shared by every card. */
+.spot {
   position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.spot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(
+    560px circle at var(--spot-x, 50%) var(--spot-y, 40%),
+    var(--spot),
+    transparent 42%
+  );
+  opacity: 0;
+  transition: opacity 0.55s var(--ease-out);
+  pointer-events: none;
+}
+
+.spot:hover::after {
+  opacity: 1;
+}
+
+.timeline__card.spot,
+.highlight.spot,
+.contact-card.spot {
+  transition:
+    --spot-x 0.7s var(--ease-out),
+    --spot-y 0.7s var(--ease-out);
 }
 
 .case-card h3 {
@@ -1043,16 +1069,17 @@ h3 {
 
 .reveal-ready [data-reveal] {
   opacity: 0;
-  transform: translateY(22px);
+  transform: translateY(4.75rem);
   transition:
-    opacity 0.8s var(--ease-out),
-    transform 0.8s var(--ease-out);
-  transition-delay: var(--delay, 0ms);
+    opacity 0.7s ease,
+    transform 1.15s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: 0s;
 }
 
 .reveal-ready [data-reveal].is-visible {
   opacity: 1;
-  transform: none;
+  transform: translateY(0);
+  transition-delay: var(--delay, 0ms);
 }
 
 /* Theme switch animation */

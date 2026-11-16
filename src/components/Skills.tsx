@@ -37,7 +37,7 @@ export function Skills() {
 
         <div className="skills-grid">
           {visibleGroups.map((group) => (
-            <div key={group.label} className="card skill-card">
+            <div key={group.label} className="card skill-card spot">
               <h3>{group.label}</h3>
               <ul className="tags">
                 {group.items.map((item) => (

@@ -64,7 +64,7 @@ export function Hero() {
 
         <ul className="highlights" aria-label="Highlights">
           {highlights.map((item, index) => (
-            <li key={item.label} className="highlight" data-reveal style={delay(300 + index * 80)}>
+            <li key={item.label} className="highlight spot" data-reveal style={delay(300 + index * 80)}>
               <span className="highlight__value">{item.value}</span>
               <span className="highlight__label">{item.label}</span>
             </li>

@@ -8,6 +8,7 @@ import { Work } from './components/Work'
 import { profile } from './data'
 import { useActiveSection } from './hooks/useActiveSection'
 import { useReveal } from './hooks/useReveal'
+import { useSpotlight } from './hooks/useSpotlight'
 import { useTheme } from './hooks/useTheme'
 
 const currentYear = new Date().getFullYear()
@@ -26,6 +27,7 @@ export default function App() {
   const { theme, toggleTheme } = useTheme()
   const activeId = useActiveSection(sectionIds)
   useReveal()
+  useSpotlight()
 
   return (
     <>

@@ -7,14 +7,14 @@ export function Education() {
       <div className="container">
         <SectionHeading id="education-title" title="Education and languages" />
         <div className="two-up">
-          <div className="card info-card" data-reveal>
+          <div className="card info-card spot" data-reveal>
             <p className="info-card__label">Education</p>
             <h3>{education.degree}</h3>
             <p className="info-card__meta">
               {education.school}, {education.year}
             </p>
           </div>
-          <div className="card info-card" data-reveal>
+          <div className="card info-card spot" data-reveal>
             <p className="info-card__label">Languages</p>
             <ul className="language-list">
               {languages.map((language) => (

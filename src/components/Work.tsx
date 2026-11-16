@@ -1,13 +1,6 @@
-import type { CSSProperties, PointerEvent } from 'react'
+import type { CSSProperties } from 'react'
 import { cases } from '../data'
 import { SectionHeading } from './SectionHeading'
-
-function trackPointer(event: PointerEvent<HTMLElement>) {
-  const card = event.currentTarget
-  const rect = card.getBoundingClientRect()
-  card.style.setProperty('--spot-x', `${event.clientX - rect.left}px`)
-  card.style.setProperty('--spot-y', `${event.clientY - rect.top}px`)
-}
 
 export function Work() {
   return (
@@ -26,7 +19,7 @@ export function Work() {
               data-reveal
               style={{ '--delay': `${index * 90}ms` } as CSSProperties}
             >
-              <article className="card case-card" onPointerMove={trackPointer}>
+              <article className="card case-card spot">
                 <div className="case-card__top">
                   <h3>{item.title}</h3>
                   <p className="case-card__context">{item.context}</p>

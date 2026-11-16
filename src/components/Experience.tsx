@@ -19,7 +19,7 @@ export function Experience() {
                 style={{ '--delay': `${index * 90}ms` } as CSSProperties}
               >
                 <span className="timeline__dot" aria-hidden="true" />
-                <div className="timeline__card">
+                <div className="timeline__card spot">
                   <div className="timeline__header">
                     <h3>
                       {job.role} · {job.company}
