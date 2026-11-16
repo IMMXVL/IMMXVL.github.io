@@ -1,32 +1,44 @@
+import Box from '@mui/material/Box'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 import { education, languages } from '../data'
-import { SectionHeading } from './SectionHeading'
+import { Section } from './Section'
 
-export function Education() {
+export const Education = () => {
   return (
-    <section id="education" className="section" aria-labelledby="education-title">
-      <div className="container">
-        <SectionHeading id="education-title" title="Education and languages" />
-        <div className="two-up">
-          <div className="card info-card spot" data-reveal>
-            <p className="info-card__label">Education</p>
-            <h3>{education.degree}</h3>
-            <p className="info-card__meta">
+    <Section id="education" title="Education and languages">
+      <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+        <Card variant="outlined" className="spot" data-reveal>
+          <CardContent sx={{ p: 3 }}>
+            <Typography variant="overline" sx={{ color: 'text.subtle' }}>
+              Education
+            </Typography>
+            <Typography variant="h3" sx={{ fontSize: '1.3rem' }}>
+              {education.degree}
+            </Typography>
+            <Typography color="text.secondary" sx={{ mt: 0.5 }}>
               {education.school}, {education.year}
-            </p>
-          </div>
-          <div className="card info-card spot" data-reveal>
-            <p className="info-card__label">Languages</p>
-            <ul className="language-list">
+            </Typography>
+          </CardContent>
+        </Card>
+        <Card variant="outlined" className="spot" data-reveal>
+          <CardContent sx={{ p: 3 }}>
+            <Typography variant="overline" sx={{ color: 'text.subtle' }}>
+              Languages
+            </Typography>
+            <Stack spacing={1.25} sx={{ mt: 1 }}>
               {languages.map((language) => (
-                <li key={language.name}>
-                  <span className="language-list__name">{language.name}</span>
-                  <span className="language-list__level">{language.level}</span>
-                </li>
+                <div key={language.name}>
+                  <Typography sx={{ fontWeight: 650 }}>{language.name}</Typography>
+                  <Typography sx={{ color: 'text.subtle' }}>{language.level}</Typography>
+                </div>
               ))}
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
+            </Stack>
+          </CardContent>
+        </Card>
+      </Box>
+    </Section>
   )
 }
