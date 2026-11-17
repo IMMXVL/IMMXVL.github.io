@@ -59,7 +59,7 @@ export const experience = [
     role: 'Frontend Developer',
     company: 'Gexateq',
     place: 'Minsk / Remote',
-    period: 'September 2021 – Present',
+    period: 'September 2021 – December 2026',
     stack: ['React', 'TypeScript', 'Redux', 'Shopify', 'Material UI', 'Ant Design', 'Swagger'],
     bullets: [
       'Built and maintained production frontends in React and TypeScript: e-commerce, including Shopify, a social product, and complex single-page applications.',

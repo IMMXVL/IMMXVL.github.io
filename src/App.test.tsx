@@ -87,6 +87,18 @@ describe('command menu', () => {
     expect(options).toHaveLength(1)
     expect(options[0]).toHaveTextContent('GitHub')
   })
+
+  it('moves the selection with the arrow keys and runs it with Enter', () => {
+    render(<App />)
+    fireEvent.keyDown(document, { key: 'k', ctrlKey: true })
+
+    const input = screen.getByRole('combobox', { name: 'Search commands' })
+    fireEvent.keyDown(input, { key: 'ArrowDown' })
+    expect(screen.getByRole('option', { name: 'Experience' })).toHaveAttribute('aria-selected', 'true')
+
+    fireEvent.keyDown(input, { key: 'Enter' })
+    expect(window.location.hash).toBe('#experience')
+  })
 })
 
 describe('skills filter', () => {

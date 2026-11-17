@@ -12,7 +12,6 @@ export const Experience = () => {
     <Section id="experience" index="01" title="Experience">
       <Box component="ol" sx={{ m: 0, p: 0, listStyle: 'none' }}>
         {experience.map((job) => {
-          const isCurrent = job.period.includes('Present')
           return (
             <Box
               key={`${job.company}-${job.period}`}
@@ -32,29 +31,6 @@ export const Experience = () => {
                 <Typography sx={{ fontFamily: mono, fontSize: '0.8rem', color: 'text.subtle', mt: 0.5 }}>
                   {job.place}
                 </Typography>
-                {isCurrent && (
-                  <Box
-                    sx={{
-                      mt: 2,
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: 1,
-                      px: 1.25,
-                      py: 0.5,
-                      borderRadius: 999,
-                      border: 1,
-                      borderColor: 'divider',
-                      fontFamily: mono,
-                      fontSize: '0.7rem',
-                      letterSpacing: '0.06em',
-                      textTransform: 'uppercase',
-                      color: 'text.secondary',
-                    }}
-                  >
-                    <span className="pulse" aria-hidden="true" />
-                    Current
-                  </Box>
-                )}
               </Box>
 
               <Box>

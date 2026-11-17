@@ -1,4 +1,4 @@
-import { useMemo, useState, type KeyboardEvent, type ReactNode } from 'react'
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import Box from '@mui/material/Box'
 import Dialog from '@mui/material/Dialog'
 import InputBase from '@mui/material/InputBase'
@@ -37,13 +37,18 @@ type CommandMenuProps = {
 const openUrl = (url: string) => window.open(url, '_blank', 'noopener,noreferrer')
 
 const goTo = (id: string) => {
-  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   history.replaceState(null, '', `#${id}`)
+  // The dialog still locks page scroll until it unmounts, so scroll on the next frame.
+  requestAnimationFrame(() => {
+    document.getElementById(id)?.scrollIntoView?.({ behavior: 'smooth', block: 'start' })
+  })
 }
 
 export const CommandMenu = ({ open, onClose, sections, theme, onToggleTheme, onCopyEmail }: CommandMenuProps) => {
   const [query, setQuery] = useState('')
   const [activeIndex, setActiveIndex] = useState(0)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const pointer = useRef({ x: -1, y: -1 })
 
   const commands = useMemo<Command[]>(
     () => [
@@ -124,22 +129,53 @@ export const CommandMenu = ({ open, onClose, sections, theme, onToggleTheme, onC
 
   const run = (command: Command | undefined) => {
     if (!command) return
+    // Run inside the key event so window.open is not blocked as a popup.
+    command.run()
     close()
-    // Let the dialog release focus and scroll lock before navigating.
-    requestAnimationFrame(command.run)
   }
 
-  const onKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-      event.preventDefault()
-      if (results.length === 0) return
-      const step = event.key === 'ArrowDown' ? 1 : -1
-      setActiveIndex((current + step + results.length) % results.length)
-    } else if (event.key === 'Enter') {
-      event.preventDefault()
-      run(results[current])
+  const resultsRef = useRef(results)
+  const currentRef = useRef(current)
+  const runRef = useRef(run)
+  useEffect(() => {
+    resultsRef.current = results
+    currentRef.current = current
+    runRef.current = run
+  })
+
+  useEffect(() => {
+    if (!open) return
+    const frame = requestAnimationFrame(() => inputRef.current?.focus())
+    const onKeyDown = (event: globalThis.KeyboardEvent) => {
+      if (event.isComposing) return
+      const list = resultsRef.current
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault()
+        event.stopPropagation()
+        if (list.length === 0) return
+        const step = event.key === 'ArrowDown' ? 1 : -1
+        const next = (Math.min(currentRef.current, list.length - 1) + step + list.length) % list.length
+        currentRef.current = next
+        setActiveIndex(next)
+      } else if (event.key === 'Enter') {
+        event.preventDefault()
+        event.stopPropagation()
+        runRef.current(list[currentRef.current])
+      }
     }
-  }
+    document.addEventListener('keydown', onKeyDown, true)
+    return () => {
+      cancelAnimationFrame(frame)
+      document.removeEventListener('keydown', onKeyDown, true)
+    }
+  }, [open])
+
+  useEffect(() => {
+    if (!open) return
+    const selected = results[current]
+    if (!selected) return
+    document.getElementById(`command-${selected.id}`)?.scrollIntoView?.({ block: 'nearest' })
+  }, [open, current, results])
 
   let lastGroup: string | null = null
 
@@ -162,11 +198,12 @@ export const CommandMenu = ({ open, onClose, sections, theme, onToggleTheme, onC
           fullWidth
           value={query}
           placeholder="Type a command or search…"
+          inputRef={inputRef}
           onChange={(event) => {
             setQuery(event.target.value)
             setActiveIndex(0)
+            currentRef.current = 0
           }}
-          onKeyDown={onKeyDown}
           inputProps={{
             role: 'combobox',
             'aria-expanded': true,
@@ -223,7 +260,13 @@ export const CommandMenu = ({ open, onClose, sections, theme, onToggleTheme, onC
                 id={`command-${command.id}`}
                 role="option"
                 aria-selected={selected}
-                onMouseMove={() => setActiveIndex(index)}
+                onMouseMove={(event) => {
+                  const moved = Math.hypot(event.clientX - pointer.current.x, event.clientY - pointer.current.y)
+                  pointer.current = { x: event.clientX, y: event.clientY }
+                  if (moved < 3) return
+                  currentRef.current = index
+                  setActiveIndex(index)
+                }}
                 onClick={() => run(command)}
                 sx={{
                   display: 'flex',
