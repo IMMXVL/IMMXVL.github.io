@@ -16,7 +16,6 @@ export const profile = {
     'Delivered scalable web applications, including e-commerce platforms and complex single-page applications. ' +
     'Focused on frontend architecture, performance (Core Web Vitals), reusable component libraries, and accessible UI. ' +
     'Works closely with designers and product teams.',
-  note: 'Commercial projects are private and covered by NDA. Details are shared on request.',
   // Visible to anyone, including the current employer. Set to null to hide the badge.
   availability: 'Open to new frontend roles' as string | null,
 }

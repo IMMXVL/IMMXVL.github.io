@@ -38,7 +38,7 @@ export const Hero = () => {
       component="section"
       id="top"
       aria-label="About"
-      sx={{ pt: { xs: 4, md: 6 }, pb: { xs: 8, md: 12 }, overflow: 'hidden' }}
+      sx={{ pt: { xs: 4, md: 6 }, pb: { xs: 6, md: 8 }, overflow: 'hidden' }}
     >
       <Container maxWidth="lg">
         <Box
@@ -170,7 +170,7 @@ export const Hero = () => {
           className="fade-in"
           style={delay(700)}
           sx={{
-            mt: { xs: 8, md: 12 },
+            mt: { xs: 6, md: 8 },
             p: 0,
             listStyle: 'none',
             display: 'grid',
@@ -208,10 +208,6 @@ export const Hero = () => {
             </Box>
           ))}
         </Box>
-
-        <Typography sx={[metaSx, { mt: 2.5, textTransform: 'none', letterSpacing: 0 }]}>
-          {profile.note}
-        </Typography>
       </Container>
     </Box>
   )
