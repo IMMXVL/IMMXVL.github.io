@@ -75,6 +75,20 @@ describe('mobile menu', () => {
   })
 })
 
+describe('command menu', () => {
+  it('opens with Ctrl+K and filters commands', () => {
+    render(<App />)
+    fireEvent.keyDown(document, { key: 'k', ctrlKey: true })
+
+    const input = screen.getByRole('combobox', { name: 'Search commands' })
+    fireEvent.change(input, { target: { value: 'git' } })
+
+    const options = screen.getAllByRole('option')
+    expect(options).toHaveLength(1)
+    expect(options[0]).toHaveTextContent('GitHub')
+  })
+})
+
 describe('skills filter', () => {
   it('shows only the selected group', () => {
     render(<App />)

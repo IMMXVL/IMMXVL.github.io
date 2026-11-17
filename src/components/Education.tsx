@@ -1,43 +1,53 @@
 import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { education, languages } from '../data'
+import { mono } from '../theme'
+import { MonoLabel } from './MonoLabel'
 import { Section } from './Section'
 
 export const Education = () => {
   return (
-    <Section id="education" title="Education and languages">
-      <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
-        <Card variant="outlined" className="spot" data-reveal>
-          <CardContent sx={{ p: 3 }}>
-            <Typography variant="overline" sx={{ color: 'text.subtle' }}>
-              Education
-            </Typography>
-            <Typography variant="h3" sx={{ fontSize: '1.3rem' }}>
-              {education.degree}
-            </Typography>
-            <Typography color="text.secondary" sx={{ mt: 0.5 }}>
-              {education.school}, {education.year}
-            </Typography>
-          </CardContent>
-        </Card>
-        <Card variant="outlined" className="spot" data-reveal>
-          <CardContent sx={{ p: 3 }}>
-            <Typography variant="overline" sx={{ color: 'text.subtle' }}>
-              Languages
-            </Typography>
-            <Stack spacing={1.25} sx={{ mt: 1 }}>
-              {languages.map((language) => (
-                <div key={language.name}>
-                  <Typography sx={{ fontWeight: 650 }}>{language.name}</Typography>
-                  <Typography sx={{ color: 'text.subtle' }}>{language.level}</Typography>
-                </div>
-              ))}
-            </Stack>
-          </CardContent>
-        </Card>
+    <Section id="education" index="04" title="Education and languages">
+      <Box
+        data-reveal
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
+          gap: '1px',
+          bgcolor: 'divider',
+          border: 1,
+          borderColor: 'divider',
+          borderRadius: 4,
+          overflow: 'hidden',
+        }}
+      >
+        <Box sx={{ bgcolor: 'background.default', p: { xs: 3, md: 4 } }}>
+          <MonoLabel>Education</MonoLabel>
+          <Typography variant="h3" sx={{ mt: 2, fontSize: '1.4rem' }}>
+            {education.degree}
+          </Typography>
+          <Typography color="text.secondary" sx={{ mt: 0.75 }}>
+            {education.school}
+          </Typography>
+          <Typography sx={{ mt: 3, fontFamily: mono, fontSize: '0.8rem', color: 'text.subtle' }}>
+            {education.year}
+          </Typography>
+        </Box>
+        <Box sx={{ bgcolor: 'background.default', p: { xs: 3, md: 4 } }}>
+          <MonoLabel>Languages</MonoLabel>
+          <Box component="dl" sx={{ m: 0, mt: 2, display: 'grid', gap: 2 }}>
+            {languages.map((language) => (
+              <Box key={language.name} sx={{ pb: 2, borderBottom: 1, borderColor: 'divider', '&:last-of-type': { pb: 0, borderBottom: 0 } }}>
+                <Typography component="dt" sx={{ fontWeight: 600, fontSize: '1.1rem', letterSpacing: '-0.02em' }}>
+                  {language.name}
+                </Typography>
+                <Typography component="dd" sx={{ m: 0, mt: 0.25, color: 'text.secondary' }}>
+                  {language.level}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+        </Box>
       </Box>
     </Section>
   )

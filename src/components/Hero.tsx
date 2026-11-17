@@ -1,236 +1,215 @@
 import type { CSSProperties } from 'react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import Chip from '@mui/material/Chip'
 import Container from '@mui/material/Container'
-import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined'
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined'
-import OpenInNewIcon from '@mui/icons-material/OpenInNew'
+import NorthEastIcon from '@mui/icons-material/NorthEast'
 import { highlights, profile } from '../data'
+import { useLocalTime } from '../hooks/useLocalTime'
+import { mono } from '../theme'
 
 const delay = (ms: number) => ({ '--delay': `${ms}ms` }) as CSSProperties
 
+const metaSx = {
+  fontFamily: mono,
+  fontSize: '0.75rem',
+  letterSpacing: '0.06em',
+  textTransform: 'uppercase',
+  color: 'text.subtle',
+} as const
+
+const LocalTime = () => {
+  const time = useLocalTime(profile.timeZone)
+  return (
+    <Box component="span" sx={{ color: 'text.secondary' }}>
+      <time>{time}</time> local
+    </Box>
+  )
+}
+
 export const Hero = () => {
+  const [first, ...rest] = profile.name.split(' ')
+
   return (
     <Box
       component="section"
       id="top"
-      aria-labelledby="hero-title"
-      sx={{ position: 'relative', overflow: 'hidden', py: { xs: 8, md: 12 } }}
+      aria-label="About"
+      sx={{ pt: { xs: 4, md: 6 }, pb: { xs: 8, md: 12 }, overflow: 'hidden' }}
     >
-      <Box aria-hidden="true" sx={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+      <Container maxWidth="lg">
         <Box
+          className="fade-in"
           sx={{
-            position: 'absolute',
-            width: { xs: 260, md: 460 },
-            height: { xs: 260, md: 460 },
-            borderRadius: '50%',
-            filter: 'blur(80px)',
-            bgcolor: 'primary.main',
-            opacity: 0.35,
-            top: '-12%',
-            left: '-8%',
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, minmax(0, 1fr))' },
+            gap: 1.5,
+            pb: 2,
+            borderBottom: 1,
+            borderColor: 'divider',
           }}
-        />
-        <Box
-          sx={{
-            position: 'absolute',
-            width: { xs: 220, md: 380 },
-            height: { xs: 220, md: 380 },
-            borderRadius: '50%',
-            filter: 'blur(80px)',
-            bgcolor: 'secondary.main',
-            opacity: 0.45,
-            top: '8%',
-            right: '-10%',
-          }}
-        />
-        <Box
-          sx={{
-            position: 'absolute',
-            width: { xs: 180, md: 320 },
-            height: { xs: 180, md: 320 },
-            borderRadius: '50%',
-            filter: 'blur(80px)',
-            bgcolor: '#f472b6',
-            opacity: 0.28,
-            bottom: '-30%',
-            left: '30%',
-          }}
-        />
-        <Box
-          sx={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: (theme) => {
-              const line = theme.palette.mode === 'dark' ? 'rgb(255 255 255 / 0.05)' : 'rgb(17 19 27 / 0.05)'
-              return `linear-gradient(${line} 1px, transparent 1px), linear-gradient(90deg, ${line} 1px, transparent 1px)`
-            },
-            backgroundSize: '56px 56px',
-            maskImage: 'radial-gradient(ellipse 70% 60% at 50% 35%, #000 30%, transparent 75%)',
-          }}
-        />
-      </Box>
-
-      <Container maxWidth="lg" sx={{ position: 'relative' }}>
-        {profile.availability && (
-          <Chip
-            data-reveal
-            label={profile.availability}
-            variant="outlined"
-            icon={
-              <Box
-                sx={{
-                  width: 9,
-                  height: 9,
-                  borderRadius: '50%',
-                  bgcolor: '#22c55e',
-                  boxShadow: '0 0 0 4px rgb(34 197 94 / 0.18)',
-                }}
-              />
-            }
-            sx={{
-              mb: 3,
-              height: 34,
-              px: 0.5,
-              color: 'text.secondary',
-              borderColor: 'divider',
-              bgcolor: (theme) =>
-                theme.palette.mode === 'dark' ? 'rgb(255 255 255 / 0.035)' : 'rgb(255 255 255 / 0.72)',
-              '& .MuiChip-icon': { ml: 1 },
-            }}
-          />
-        )}
+        >
+          <Typography sx={metaSx}>Frontend Engineer</Typography>
+          <Typography sx={[metaSx, { textAlign: { sm: 'center' } }]}>
+            {profile.location} · <LocalTime />
+          </Typography>
+          {profile.availability && (
+            <Typography
+              sx={[
+                metaSx,
+                {
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1.25,
+                  justifyContent: { sm: 'flex-end' },
+                  color: 'text.secondary',
+                },
+              ]}
+            >
+              <span className="pulse" aria-hidden="true" />
+              {profile.availability}
+            </Typography>
+          )}
+        </Box>
 
         <Typography
           id="hero-title"
           variant="h1"
-          data-reveal
-          style={delay(60)}
-          sx={{ fontSize: { xs: '3rem', md: '6rem' } }}
+          sx={{
+            mt: { xs: 5, md: 7 },
+            ml: '-0.04em',
+            fontSize: { xs: 'clamp(3.75rem, 19vw, 6rem)', md: 'clamp(6rem, 15vw, 12.5rem)' },
+          }}
         >
-          {profile.name}
+          <span className="rise">
+            <span style={delay(80)}>{first}</span>
+          </span>{' '}
+          <span className="rise">
+            <span style={delay(180)}>
+              {rest.join(' ')}
+              <Box component="span" aria-hidden="true" sx={{ color: 'primary.main' }}>
+                .
+              </Box>
+            </span>
+          </span>
         </Typography>
 
-        <Typography variant="h5" data-reveal style={delay(120)} sx={{ mt: 2, fontWeight: 600 }}>
-          <Box
-            component="span"
+        <Box
+          sx={{
+            mt: { xs: 5, md: 8 },
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', md: 'repeat(12, minmax(0, 1fr))' },
+            gap: { xs: 3, md: 4 },
+          }}
+        >
+          <Typography
+            className="fade-in"
+            style={delay(450)}
             sx={{
-              background: (theme) =>
-                `linear-gradient(120deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-              WebkitBackgroundClip: 'text',
-              backgroundClip: 'text',
-              color: 'transparent',
+              gridColumn: { md: 'span 5' },
+              fontSize: { xs: '1.5rem', md: '1.9rem' },
+              fontWeight: 500,
+              letterSpacing: '-0.035em',
+              lineHeight: 1.2,
             }}
           >
-            Frontend Engineer
-          </Box>
-          <Box component="span" sx={{ color: 'text.secondary' }}>
-            {' '}
-            · React, TypeScript
-          </Box>
-        </Typography>
+            {profile.tagline}
+          </Typography>
 
-        <Typography
-          data-reveal
-          style={delay(180)}
-          color="text.secondary"
-          sx={{ mt: 2.5, maxWidth: 760, fontSize: '1.05rem' }}
-        >
-          {profile.summary}
-        </Typography>
+          <Box className="fade-in" style={delay(550)} sx={{ gridColumn: { md: '7 / span 6' } }}>
+            <Typography sx={{ color: 'text.secondary', fontSize: '1.02rem' }}>{profile.summary}</Typography>
 
-        <Stack
-          component="ul"
-          aria-label="Links"
-          data-reveal
-          style={delay(240)}
-          direction="row"
-          useFlexGap
-          sx={{ flexWrap: 'wrap', gap: 1.25, mt: 4, p: 0, listStyle: 'none' }}
-        >
-          <li>
-            <Button variant="contained" href={`mailto:${profile.email}`} startIcon={<EmailOutlinedIcon />}>
-              Email me
-            </Button>
-          </li>
-          <li>
-            <Button
-              variant="outlined"
-              color="inherit"
-              href={profile.linkedin}
-              target="_blank"
-              rel="noreferrer"
-              endIcon={<OpenInNewIcon />}
+            <Stack
+              component="ul"
+              aria-label="Links"
+              direction="row"
+              useFlexGap
+              sx={{ flexWrap: 'wrap', gap: 1, mt: 3.5, p: 0, listStyle: 'none' }}
             >
-              LinkedIn
-            </Button>
-          </li>
-          <li>
-            <Button
-              variant="outlined"
-              color="inherit"
-              href={profile.github}
-              target="_blank"
-              rel="noreferrer"
-              endIcon={<OpenInNewIcon />}
-            >
-              GitHub
-            </Button>
-          </li>
-          <li>
-            <Button
-              variant="outlined"
-              color="inherit"
-              href={profile.cvPath}
-              target="_blank"
-              rel="noreferrer"
-              startIcon={<DownloadOutlinedIcon />}
-              sx={{ bgcolor: 'transparent', borderColor: 'divider' }}
-            >
-              Download CV (PDF)
-            </Button>
-          </li>
-        </Stack>
+              <li>
+                <Button
+                  variant="contained"
+                  href={`mailto:${profile.email}`}
+                  endIcon={<ArrowForwardIcon />}
+                  className="arrow-link"
+                >
+                  Email me
+                </Button>
+              </li>
+              <li>
+                <Button variant="outlined" href={profile.linkedin} target="_blank" rel="noreferrer" endIcon={<NorthEastIcon />}>
+                  LinkedIn
+                </Button>
+              </li>
+              <li>
+                <Button variant="outlined" href={profile.github} target="_blank" rel="noreferrer" endIcon={<NorthEastIcon />}>
+                  GitHub
+                </Button>
+              </li>
+              <li>
+                <Button
+                  variant="outlined"
+                  href={profile.cvPath}
+                  target="_blank"
+                  rel="noreferrer"
+                  startIcon={<DownloadOutlinedIcon />}
+                >
+                  Download CV (PDF)
+                </Button>
+              </li>
+            </Stack>
+          </Box>
+        </Box>
 
         <Box
           component="ul"
           aria-label="Highlights"
+          className="fade-in"
+          style={delay(700)}
           sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' },
-            gap: 2,
-            mt: { xs: 6, md: 8 },
+            mt: { xs: 8, md: 12 },
             p: 0,
             listStyle: 'none',
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, minmax(0, 1fr))' },
+            borderTop: 1,
+            borderBottom: 1,
+            borderColor: 'divider',
           }}
         >
           {highlights.map((item, index) => (
-            <Paper
+            <Box
               key={item.label}
               component="li"
-              variant="outlined"
-              className="spot"
-              data-reveal
-              style={delay(300 + index * 80)}
-              sx={{
-                p: 2.5,
-                bgcolor: (theme) =>
-                  theme.palette.mode === 'dark' ? 'rgb(255 255 255 / 0.035)' : 'rgb(255 255 255 / 0.72)',
+              sx={(theme) => {
+                const line = index === 0 ? 'none' : `1px solid ${theme.palette.divider}`
+                return {
+                  py: { xs: 3, md: 4 },
+                  pl: { sm: index === 0 ? 0 : 3 },
+                  borderLeft: { xs: 'none', sm: line },
+                  borderTop: { xs: line, sm: 'none' },
+                }
               }}
             >
-              <Typography variant="h4" sx={{ fontWeight: 700 }}>
+              <Typography
+                sx={{
+                  fontSize: { xs: '2.25rem', md: '3rem' },
+                  fontWeight: 600,
+                  letterSpacing: '-0.05em',
+                  lineHeight: 1,
+                }}
+              >
                 {item.value}
               </Typography>
-              <Typography color="text.secondary">{item.label}</Typography>
-            </Paper>
+              <Typography sx={[metaSx, { mt: 1.5 }]}>{item.label}</Typography>
+            </Box>
           ))}
         </Box>
 
-        <Typography data-reveal style={delay(540)} variant="body2" sx={{ mt: 3, color: 'text.subtle' }}>
+        <Typography sx={[metaSx, { mt: 2.5, textTransform: 'none', letterSpacing: 0 }]}>
           {profile.note}
         </Typography>
       </Container>

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import ButtonBase from '@mui/material/ButtonBase'
 import Collapse from '@mui/material/Collapse'
 import Container from '@mui/material/Container'
 import IconButton from '@mui/material/IconButton'
@@ -12,6 +13,7 @@ import MenuIcon from '@mui/icons-material/Menu'
 import CloseIcon from '@mui/icons-material/Close'
 import { alpha } from '@mui/material/styles'
 import type { Theme } from '../hooks/useTheme'
+import { mono } from '../theme'
 
 type HeaderProps = {
   name: string
@@ -19,50 +21,14 @@ type HeaderProps = {
   activeId: string | null
   theme: Theme
   onToggleTheme: () => void
+  onOpenCommand: () => void
 }
 
-const NavLink = ({
-  id,
-  label,
-  active,
-  menu,
-  onNavigate,
-}: {
-  id: string
-  label: string
-  active: boolean
-  menu?: boolean
-  onNavigate: () => void
-}) => (
-  <Button
-    component="a"
-    href={`#${id}`}
-    color="inherit"
-    aria-current={active ? 'true' : undefined}
-    onClick={onNavigate}
-    sx={(mui) =>
-      menu
-        ? {
-            width: '100%',
-            justifyContent: 'flex-start',
-            px: 2,
-            py: 1.25,
-            '&.MuiButton-root': { borderRadius: 0, border: 'none', boxShadow: 'none' },
-            color: active ? 'text.primary' : 'text.secondary',
-            bgcolor: active ? alpha(mui.palette.primary.main, 0.16) : 'transparent',
-          }
-        : {
-            color: active ? 'text.primary' : 'text.secondary',
-            bgcolor: active ? 'action.hover' : 'transparent',
-          }
-    }
-  >
-    {label}
-  </Button>
-)
+const isMac = () => typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform)
 
-export const Header = ({ name, sections, activeId, theme, onToggleTheme }: HeaderProps) => {
+export const Header = ({ name, sections, activeId, theme, onToggleTheme, onOpenCommand }: HeaderProps) => {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [mac] = useState(isMac)
   const menuButtonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
@@ -86,8 +52,8 @@ export const Header = ({ name, sections, activeId, theme, onToggleTheme }: Heade
       position="sticky"
       elevation={0}
       sx={{
-        bgcolor: (mui) => alpha(mui.palette.background.default, 0.82),
-        backdropFilter: 'blur(16px)',
+        bgcolor: (mui) => alpha(mui.palette.background.default, 0.78),
+        backdropFilter: 'saturate(180%) blur(14px)',
         borderBottom: 1,
         borderColor: 'divider',
         color: 'text.primary',
@@ -95,31 +61,25 @@ export const Header = ({ name, sections, activeId, theme, onToggleTheme }: Heade
       }}
     >
       <Container maxWidth="lg">
-        <Toolbar disableGutters sx={{ gap: 1, minHeight: 68 }}>
-          <Button
+        <Toolbar disableGutters sx={{ gap: 1, minHeight: { xs: 60, sm: 64 } }}>
+          <ButtonBase
             component="a"
             href="#top"
-            color="inherit"
-            sx={{ px: 1, fontWeight: 700, fontSize: '1rem' }}
+            sx={{ gap: 1.25, borderRadius: 1.5, py: 0.5, pr: 1, fontWeight: 600, letterSpacing: '-0.02em' }}
           >
             <Box
               aria-hidden="true"
               sx={{
-                mr: '0.65rem',
-                width: '2.25rem',
-                height: '2.25rem',
-                borderRadius: '10px',
+                width: 28,
+                height: 28,
+                borderRadius: '8px',
                 display: 'grid',
                 placeItems: 'center',
-                flexShrink: 0,
-                background: (mui) =>
-                  `linear-gradient(120deg, ${mui.palette.primary.main}, ${mui.palette.secondary.main})`,
-                color: (mui) => (mui.palette.mode === 'dark' ? '#0a0b10' : '#ffffff'),
-                fontFamily: "'Space Grotesk Variable', sans-serif",
-                fontSize: '0.85rem',
-                fontWeight: 700,
-                letterSpacing: '0.02em',
-                lineHeight: 1,
+                bgcolor: 'text.primary',
+                color: 'background.default',
+                fontFamily: mono,
+                fontSize: '0.72rem',
+                fontWeight: 600,
               }}
             >
               {initials}
@@ -127,76 +87,163 @@ export const Header = ({ name, sections, activeId, theme, onToggleTheme }: Heade
             <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
               {name}
             </Box>
-          </Button>
+          </ButtonBase>
 
           <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 0.5 }}>
             <Box component="nav" aria-label="Main" id="site-nav" className="site-nav">
-              {sections.map((section) => (
-                <NavLink
-                  key={section.id}
-                  id={section.id}
-                  label={section.label}
-                  active={activeId === section.id}
-                  onNavigate={() => setMenuOpen(false)}
-                />
-              ))}
+              {sections.map((section) => {
+                const active = activeId === section.id
+                return (
+                  <ButtonBase
+                    key={section.id}
+                    component="a"
+                    href={`#${section.id}`}
+                    aria-current={active ? 'true' : undefined}
+                    sx={{
+                      gap: 0.75,
+                      px: 1.25,
+                      py: 0.75,
+                      borderRadius: 1.5,
+                      fontSize: '0.875rem',
+                      fontWeight: 500,
+                      color: active ? 'text.primary' : 'text.secondary',
+                      transition: 'color .2s',
+                      '&:hover': { color: 'text.primary' },
+                    }}
+                  >
+                    <Box
+                      aria-hidden="true"
+                      sx={{
+                        width: 5,
+                        height: 5,
+                        borderRadius: '50%',
+                        bgcolor: 'primary.main',
+                        transform: active ? 'scale(1)' : 'scale(0)',
+                        transition: 'transform .3s cubic-bezier(0.16, 1, 0.3, 1)',
+                      }}
+                    />
+                    {section.label}
+                  </ButtonBase>
+                )
+              })}
             </Box>
 
-            <Box sx={{ display: 'flex', gap: 0.5 }}>
-              <IconButton
-                onClick={onToggleTheme}
-                aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-                color="inherit"
+            <Button
+              variant="outlined"
+              onClick={onOpenCommand}
+              aria-label="Open command menu"
+              aria-keyshortcuts={mac ? 'Meta+K' : 'Control+K'}
+              sx={{
+                display: { xs: 'none', sm: 'inline-flex' },
+                ml: 1,
+                minHeight: 34,
+                px: 1.25,
+                gap: 1,
+                color: 'text.secondary',
+                fontSize: '0.8rem',
+              }}
+            >
+              Search
+              <Box
+                component="kbd"
+                sx={{
+                  fontFamily: mono,
+                  fontSize: '0.7rem',
+                  px: 0.75,
+                  py: 0.15,
+                  borderRadius: 1,
+                  border: 1,
+                  borderColor: 'divider',
+                  color: 'text.subtle',
+                }}
               >
-                {theme === 'dark' ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon />}
-              </IconButton>
-              <IconButton
-                ref={menuButtonRef}
-                className="menu-button"
-                aria-expanded={menuOpen}
-                aria-controls="mobile-nav"
-                aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-                color="inherit"
-                onClick={() => setMenuOpen((open) => !open)}
-              >
-                <Box className="menu-icon" data-open={menuOpen ? 'true' : 'false'}>
-                  <MenuIcon className="menu-icon__open" />
-                  <CloseIcon className="menu-icon__close" />
-                </Box>
-              </IconButton>
-            </Box>
+                {mac ? '⌘K' : 'Ctrl K'}
+              </Box>
+            </Button>
+
+            <IconButton
+              onClick={onToggleTheme}
+              aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+              color="inherit"
+              size="small"
+              sx={{ width: 36, height: 36 }}
+            >
+              {theme === 'dark' ? <LightModeOutlinedIcon fontSize="small" /> : <DarkModeOutlinedIcon fontSize="small" />}
+            </IconButton>
+            <IconButton
+              ref={menuButtonRef}
+              className="menu-button"
+              aria-expanded={menuOpen}
+              aria-controls="mobile-nav"
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              color="inherit"
+              sx={{ width: 40, height: 40 }}
+              onClick={() => setMenuOpen((open) => !open)}
+            >
+              <Box className="menu-icon" data-open={menuOpen ? 'true' : 'false'}>
+                <MenuIcon className="menu-icon__open" />
+                <CloseIcon className="menu-icon__close" />
+              </Box>
+            </IconButton>
           </Box>
         </Toolbar>
       </Container>
 
-      <Collapse in={menuOpen} timeout={320} unmountOnExit className="mobile-nav">
+      <Collapse in={menuOpen} timeout={350} unmountOnExit className="mobile-nav">
         <Box
           component="nav"
           id="mobile-nav"
           aria-label="Main"
           sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 0.25,
-            width: '100%',
-            px: 0,
-            pt: 1,
-            pb: 1.5,
             bgcolor: 'background.default',
-            borderTop: 1,
+            borderBottom: 1,
             borderColor: 'divider',
+            boxShadow: '0 24px 48px rgb(0 0 0 / 0.25)',
+            py: 1,
           }}
         >
-          {sections.map((section) => (
-            <NavLink
-              key={section.id}
-              id={section.id}
-              label={section.label}
-              active={activeId === section.id}
-              menu
-              onNavigate={() => setMenuOpen(false)}
-            />
-          ))}
+          {sections.map((section, index) => {
+            const active = activeId === section.id
+            return (
+              <ButtonBase
+                key={section.id}
+                component="a"
+                href={`#${section.id}`}
+                aria-current={active ? 'true' : undefined}
+                onClick={() => setMenuOpen(false)}
+                sx={{
+                  display: 'flex',
+                  width: '100%',
+                  justifyContent: 'flex-start',
+                  alignItems: 'baseline',
+                  gap: 2,
+                  px: 3,
+                  py: 1.5,
+                  fontSize: '1.6rem',
+                  fontWeight: 600,
+                  letterSpacing: '-0.035em',
+                  color: active ? 'text.primary' : 'text.secondary',
+                  borderLeft: '2px solid',
+                  borderLeftColor: active ? 'primary.main' : 'transparent',
+                }}
+              >
+                <Box
+                  component="span"
+                  aria-hidden="true"
+                  sx={{
+                    fontFamily: mono,
+                    fontSize: '0.75rem',
+                    fontWeight: 500,
+                    letterSpacing: 0,
+                    color: active ? 'primary.main' : 'text.subtle',
+                  }}
+                >
+                  {String(index).padStart(2, '0')}
+                </Box>
+                {section.label}
+              </ButtonBase>
+            )
+          })}
         </Box>
       </Collapse>
     </AppBar>

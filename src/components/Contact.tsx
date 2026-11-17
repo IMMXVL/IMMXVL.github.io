@@ -1,119 +1,128 @@
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
 import Container from '@mui/material/Container'
 import Link from '@mui/material/Link'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import CheckIcon from '@mui/icons-material/Check'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined'
 import { profile } from '../data'
-import { useCopyToClipboard } from '../hooks/useCopyToClipboard'
+import { mono } from '../theme'
 
-export const Contact = () => {
-  const { copied, copy } = useCopyToClipboard()
+type ContactProps = {
+  copied: boolean
+  onCopy: () => void
+}
 
+export const Contact = ({ copied, onCopy }: ContactProps) => {
   return (
     <Box
       component="section"
       id="contact"
       aria-labelledby="contact-title"
-      sx={{ py: { xs: 8, md: 11 }, borderTop: 1, borderColor: 'divider' }}
+      sx={{ py: { xs: 10, md: 16 }, borderTop: 1, borderColor: 'divider', overflow: 'hidden' }}
     >
       <Container maxWidth="lg">
-        <Card
-          className="spot"
+        <Typography
+          aria-hidden="true"
+          data-reveal
+          sx={{ fontFamily: mono, fontSize: '0.8rem', color: 'primary.main', mb: 3 }}
+        >
+          (05) Contact
+        </Typography>
+
+        <Typography
+          id="contact-title"
+          variant="h2"
+          data-reveal
+          sx={{ fontSize: { xs: '2.75rem', sm: '4rem', md: '6rem' }, lineHeight: 0.95, letterSpacing: '-0.055em' }}
+        >
+          Have a role in mind?{' '}
+          <Box component="span" sx={{ color: 'text.subtle', display: { md: 'block' } }}>
+            Let’s talk.
+          </Box>
+        </Typography>
+
+        <Box
           data-reveal
           sx={{
-            position: 'relative',
-            textAlign: 'center',
-            border: '1px solid transparent',
-            borderRadius: '34px',
-            background: (theme) =>
-              `linear-gradient(${theme.palette.background.paper}, ${theme.palette.background.paper}) padding-box, linear-gradient(120deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main}) border-box`,
-            '&::before': {
-              content: '""',
-              position: 'absolute',
-              inset: '-40% 10% auto',
-              height: '80%',
-              zIndex: 0,
-              background: (theme) =>
-                `radial-gradient(closest-side, color-mix(in srgb, ${theme.palette.primary.main} 22%, transparent), transparent)`,
-              filter: 'blur(30px)',
-              pointerEvents: 'none',
-            },
+            mt: { xs: 6, md: 9 },
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', md: 'minmax(0, 7fr) minmax(0, 5fr)' },
+            gap: { xs: 4, md: 6 },
+            alignItems: 'end',
           }}
         >
-          <CardContent sx={{ position: 'relative', zIndex: 1, px: { xs: 2.5, md: 6 }, py: { xs: 5, md: 8 } }}>
-            <Typography
-              id="contact-title"
-              variant="h2"
-              sx={{ fontSize: { xs: '2.2rem', md: '3.75rem' } }}
-            >
-              Contact
+          <div>
+            <Typography sx={{ fontFamily: mono, fontSize: '0.75rem', letterSpacing: '0.06em', color: 'text.subtle', mb: 1.5 }}>
+              EMAIL
             </Typography>
-            <Typography color="text.secondary" sx={{ maxWidth: '52ch', mx: 'auto', mt: 2 }}>
-              Open to frontend roles with React and TypeScript. The easiest way to reach me is by email.
-            </Typography>
-            <Typography
+            <Link
+              href={`mailto:${profile.email}`}
+              underline="none"
+              className="arrow-link"
               sx={{
-                mt: 3,
-                fontFamily: "'Space Grotesk Variable', sans-serif",
+                display: 'inline-flex',
+                alignItems: 'baseline',
+                gap: '0.3em',
+                color: 'text.primary',
+                fontSize: { xs: '1.6rem', sm: '2.25rem', md: '3rem' },
                 fontWeight: 600,
-                fontSize: { xs: '1.2rem', md: '1.75rem' },
+                letterSpacing: '-0.04em',
                 overflowWrap: 'anywhere',
+                backgroundImage: (theme) => `linear-gradient(${theme.palette.primary.main}, ${theme.palette.primary.main})`,
+                backgroundSize: '0% 2px',
+                backgroundPosition: '0 100%',
+                backgroundRepeat: 'no-repeat',
+                transition: 'background-size .5s cubic-bezier(0.16, 1, 0.3, 1)',
+                '&:hover, &:focus-visible': { backgroundSize: '100% 2px' },
               }}
             >
-              <Link
-                href={`mailto:${profile.email}`}
-                underline="none"
-                sx={{
-                  color: 'text.primary',
-                  backgroundImage: (theme) =>
-                    `linear-gradient(120deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                  backgroundSize: '100% 2px',
-                  backgroundPosition: '0 100%',
-                  backgroundRepeat: 'no-repeat',
-                  pb: '0.15rem',
-                }}
-              >
-                {profile.email}
-              </Link>
+              {profile.email}
+              <Box component="span" className="arrow" aria-hidden="true" sx={{ color: 'primary.main' }}>
+                ↗
+              </Box>
+            </Link>
+          </div>
+
+          <div>
+            <Typography color="text.secondary" sx={{ maxWidth: '44ch' }}>
+              Open to frontend roles with React and TypeScript. The easiest way to reach me is by email.
             </Typography>
-            <Stack
-              direction="row"
-              useFlexGap
-              sx={{ justifyContent: 'center', flexWrap: 'wrap', gap: 1.25, mt: 4 }}
-            >
-              <Button variant="contained" href={`mailto:${profile.email}`} startIcon={<EmailOutlinedIcon />}>
+            <Stack direction="row" useFlexGap sx={{ flexWrap: 'wrap', gap: 1, mt: 3 }}>
+              <Button variant="contained" href={`mailto:${profile.email}`}>
                 Write an email
               </Button>
               <Button
                 variant="outlined"
-                color="inherit"
                 startIcon={copied ? <CheckIcon /> : <ContentCopyIcon />}
-                onClick={() => copy(profile.email)}
+                onClick={onCopy}
               >
                 {copied ? 'Copied' : 'Copy email'}
               </Button>
             </Stack>
-            <Box
-              component="p"
-              role="status"
-              sx={{
-                position: 'absolute',
-                width: 1,
-                height: 1,
-                overflow: 'hidden',
-                clip: 'rect(0 0 0 0)',
-              }}
-            >
-              {copied ? 'Email copied to clipboard' : ''}
-            </Box>
-          </CardContent>
-        </Card>
+          </div>
+        </Box>
+
+        <Box
+          component="p"
+          role="status"
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '1px',
+            height: '1px',
+            m: '-1px',
+            p: 0,
+            overflow: 'hidden',
+            clip: 'rect(0 0 0 0)',
+            whiteSpace: 'nowrap',
+            border: 0,
+          }}
+        >
+          {copied ? 'Email copied to clipboard' : ''}
+        </Box>
       </Container>
     </Box>
   )

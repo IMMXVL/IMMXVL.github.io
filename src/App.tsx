@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import CssBaseline from '@mui/material/CssBaseline'
-import Stack from '@mui/material/Stack'
+import Link from '@mui/material/Link'
 import Typography from '@mui/material/Typography'
 import { ThemeProvider } from '@mui/material/styles'
+import { CommandMenu } from './components/CommandMenu'
 import { Contact } from './components/Contact'
 import { Education } from './components/Education'
 import { Experience } from './components/Experience'
@@ -14,10 +15,10 @@ import { Skills } from './components/Skills'
 import { Work } from './components/Work'
 import { profile } from './data'
 import { useActiveSection } from './hooks/useActiveSection'
+import { useCopyToClipboard } from './hooks/useCopyToClipboard'
 import { useReveal } from './hooks/useReveal'
-import { useSpotlight } from './hooks/useSpotlight'
 import { useTheme } from './hooks/useTheme'
-import { createAppTheme } from './theme'
+import { createAppTheme, mono } from './theme'
 
 const currentYear = new Date().getFullYear()
 
@@ -55,42 +56,76 @@ const ScrollProgress = () => {
         left: 0,
         right: 0,
         zIndex: (theme) => theme.zIndex.appBar + 1,
-        height: 3,
-        bgcolor: 'transparent',
-        overflow: 'hidden',
+        height: 2,
+        pointerEvents: 'none',
       }}
     >
       <Box
         ref={barRef}
         sx={{
           height: '100%',
-          width: '100%',
           transformOrigin: 'left center',
           transform: 'scaleX(0)',
-          background: (theme) =>
-            `linear-gradient(120deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+          bgcolor: 'primary.main',
         }}
       />
     </Box>
   )
 }
 
+const Toast = ({ show, children }: { show: boolean; children: string }) => (
+  <Box
+    aria-hidden="true"
+    sx={{
+      position: 'fixed',
+      left: '50%',
+      bottom: 24,
+      zIndex: 1600,
+      px: 2,
+      py: 1.25,
+      borderRadius: 999,
+      bgcolor: 'text.primary',
+      color: 'background.default',
+      fontFamily: mono,
+      fontSize: '0.8rem',
+      pointerEvents: 'none',
+      transform: show ? 'translate(-50%, 0)' : 'translate(-50%, 140%)',
+      opacity: show ? 1 : 0,
+      transition: 'transform .45s cubic-bezier(0.16, 1, 0.3, 1), opacity .3s',
+    }}
+  >
+    {children}
+  </Box>
+)
+
 const App = () => {
   const { theme, toggleTheme } = useTheme()
   const activeId = useActiveSection(sectionIds)
   const muiTheme = useMemo(() => createAppTheme(theme), [theme])
+  const { copied, copy } = useCopyToClipboard()
+  const [commandOpen, setCommandOpen] = useState(false)
   useReveal()
-  useSpotlight()
+
+  const copyEmail = useCallback(() => {
+    void copy(profile.email)
+  }, [copy])
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault()
+        setCommandOpen((open) => !open)
+      }
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [])
 
   return (
     <ThemeProvider theme={muiTheme}>
       <CssBaseline />
       <ScrollProgress />
-      <Box
-        component="a"
-        className="skip-link"
-        href="#main"
-      >
+      <Box component="a" className="skip-link" href="#main">
         Skip to content
       </Box>
 
@@ -100,6 +135,7 @@ const App = () => {
         activeId={activeId}
         theme={theme}
         onToggleTheme={toggleTheme}
+        onOpenCommand={() => setCommandOpen(true)}
       />
 
       <Box component="main" id="main">
@@ -108,24 +144,43 @@ const App = () => {
         <Work />
         <Skills />
         <Education />
-        <Contact />
+        <Contact copied={copied} onCopy={copyEmail} />
       </Box>
 
-      <Box component="footer" sx={{ borderTop: 1, borderColor: 'divider', py: 3 }}>
-        <Container maxWidth="lg">
-          <Stack
-            direction={{ xs: 'column', sm: 'row' }}
-            sx={{ justifyContent: 'space-between', gap: 1 }}
-          >
-            <Typography variant="body2" sx={{ color: 'text.subtle' }}>
-              © {currentYear} {profile.name}
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'text.subtle' }}>
-              Built with React, TypeScript and Material UI
-            </Typography>
-          </Stack>
+      <Box component="footer" sx={{ borderTop: 1, borderColor: 'divider', py: 2.5 }}>
+        <Container
+          maxWidth="lg"
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            justifyContent: 'space-between',
+            gap: 1.5,
+            fontFamily: mono,
+            fontSize: '0.75rem',
+            color: 'text.subtle',
+          }}
+        >
+          <Typography component="span" sx={{ font: 'inherit' }}>
+            © {currentYear} {profile.name}
+          </Typography>
+          <Typography component="span" sx={{ font: 'inherit' }}>
+            Built with React, TypeScript and Material UI
+          </Typography>
+          <Link href="#top" underline="hover" sx={{ font: 'inherit', color: 'text.secondary' }}>
+            Back to top ↑
+          </Link>
         </Container>
       </Box>
+
+      <CommandMenu
+        open={commandOpen}
+        onClose={() => setCommandOpen(false)}
+        sections={sections}
+        theme={theme}
+        onToggleTheme={toggleTheme}
+        onCopyEmail={copyEmail}
+      />
+      <Toast show={copied}>Email copied to clipboard</Toast>
     </ThemeProvider>
   )
 }

@@ -8,32 +8,69 @@ export function useReveal() {
     if (typeof IntersectionObserver === 'undefined' || prefersReducedMotion()) return
 
     const root = document.documentElement
-    const elements = [...document.querySelectorAll<HTMLElement>('[data-reveal]')]
-    const viewBottom = window.innerHeight
+    // React can rewrite className (for example on a theme change), so remember what was shown.
+    const shown = new WeakSet<Element>()
+
+    const show = (element: Element) => {
+      shown.add(element)
+      element.classList.add('is-visible')
+    }
 
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue
-          entry.target.classList.add('is-visible')
+          show(entry.target)
           observer.unobserve(entry.target)
         }
       },
       { rootMargin: '0px 0px -40px 0px', threshold: 0 },
     )
 
-    for (const element of elements) {
+    const register = (element: HTMLElement) => {
+      if (shown.has(element)) {
+        element.classList.add('is-visible')
+        return
+      }
       const rect = element.getBoundingClientRect()
       // A zero-height box never intersects, so it must stay visible.
-      // Anything already on screen is shown immediately and does not hide later.
-      if (rect.height === 0 || rect.top < viewBottom) element.classList.add('is-visible')
+      if (rect.height === 0 || rect.top < window.innerHeight) show(element)
       else observer.observe(element)
     }
 
+    const scan = (scope: ParentNode) => {
+      scope.querySelectorAll<HTMLElement>('[data-reveal]').forEach(register)
+    }
+
+    scan(document)
     root.classList.add('reveal-ready')
+
+    const mutations = new MutationObserver((records) => {
+      for (const record of records) {
+        if (record.type === 'attributes') {
+          const target = record.target
+          if (target instanceof HTMLElement && shown.has(target) && !target.classList.contains('is-visible')) {
+            target.classList.add('is-visible')
+          }
+          continue
+        }
+        record.addedNodes.forEach((node) => {
+          if (!(node instanceof HTMLElement)) return
+          if (node.matches('[data-reveal]')) register(node)
+          scan(node)
+        })
+      }
+    })
+    mutations.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class'],
+    })
 
     return () => {
       observer.disconnect()
+      mutations.disconnect()
       root.classList.remove('reveal-ready')
     }
   }, [])

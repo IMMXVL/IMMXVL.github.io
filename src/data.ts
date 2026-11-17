@@ -5,6 +5,8 @@ export const profile = {
   name: 'Maxim Velichko',
   title: 'Frontend Engineer (React, TypeScript)',
   location: 'Minsk, Belarus',
+  timeZone: 'Europe/Minsk',
+  tagline: 'I build fast, accessible interfaces with React and TypeScript.',
   email: 'immaxvel@gmail.com',
   linkedin: 'https://linkedin.com/in/immaxvel',
   github: 'https://github.com/IMMXVL',
@@ -58,6 +60,7 @@ export const experience = [
     company: 'Gexateq',
     place: 'Minsk / Remote',
     period: 'September 2021 – Present',
+    stack: ['React', 'TypeScript', 'Redux', 'Shopify', 'Material UI', 'Ant Design', 'Swagger'],
     bullets: [
       'Built and maintained production frontends in React and TypeScript: e-commerce, including Shopify, a social product, and complex single-page applications.',
       'Improved loading and interaction with code splitting, lazy loading, and tighter rendering and state updates. Core Web Vitals on these projects got better.',

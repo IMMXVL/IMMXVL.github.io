@@ -1,99 +1,96 @@
-import type { CSSProperties } from 'react'
 import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { alpha } from '@mui/material/styles'
 import { experience } from '../data'
+import { mono } from '../theme'
 import { BulletList } from './BulletList'
+import { MonoLabel } from './MonoLabel'
 import { Section } from './Section'
-
-const delay = (ms: number) => ({ '--delay': `${ms}ms` }) as CSSProperties
 
 export const Experience = () => {
   return (
-    <Section id="experience" title="Experience">
-      <Box
-        component="ol"
-        sx={{
-          position: 'relative',
-          display: 'grid',
-          gap: '1.25rem',
-          m: 0,
-          p: 0,
-          listStyle: 'none',
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            left: { xs: '0.4rem', sm: '0.55rem' },
-            top: '0.5rem',
-            bottom: '0.5rem',
-            width: '2px',
-            opacity: 0.6,
-            background: (theme) =>
-              `linear-gradient(${theme.palette.primary.main}, ${theme.palette.secondary.main} 60%, transparent)`,
-          },
-        }}
-      >
-        {experience.map((job, index) => {
+    <Section id="experience" index="01" title="Experience">
+      <Box component="ol" sx={{ m: 0, p: 0, listStyle: 'none' }}>
+        {experience.map((job) => {
           const isCurrent = job.period.includes('Present')
           return (
             <Box
               key={`${job.company}-${job.period}`}
               component="li"
               data-reveal
-              style={delay(index * 90)}
-              sx={{ position: 'relative', pl: { xs: '1.9rem', sm: '2.5rem' } }}
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', sm: 'minmax(0, 3fr) minmax(0, 6fr)' },
+                gap: { xs: 2, sm: 4 },
+                py: { xs: 0, md: 0.5 },
+              }}
             >
-              <Box
-                aria-hidden="true"
-                sx={{
-                  position: 'absolute',
-                  left: { xs: '-0.05rem', sm: '0.1rem' },
-                  top: '1.75rem',
-                  width: '1.05rem',
-                  height: '1.05rem',
-                  borderRadius: '50%',
-                  boxSizing: 'border-box',
-                  bgcolor: isCurrent ? 'transparent' : 'background.default',
-                  background: (theme) =>
-                    isCurrent
-                      ? `linear-gradient(120deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`
-                      : undefined,
-                  border: isCurrent ? 0 : '2px solid',
-                  borderColor: 'primary.main',
-                  boxShadow: (theme) =>
-                    isCurrent ? `0 0 0 6px ${alpha(theme.palette.primary.main, 0.18)}` : 'none',
-                }}
-              />
-              <Card variant="outlined" className="spot">
-                <CardContent sx={{ p: { xs: 2.5, md: 3.5 }, '&:last-child': { pb: { xs: 2.5, md: 3.5 } } }}>
-                  <Stack direction="row" spacing={1} useFlexGap sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-                    <Typography variant="h3" sx={{ fontSize: { xs: '1.25rem', md: '1.5rem' } }}>
-                      {job.role} · {job.company}
-                    </Typography>
-                    {isCurrent && (
-                      <Chip
-                        label="Current"
-                        size="small"
-                        sx={{
-                          height: 24,
-                          color: (theme) => (theme.palette.mode === 'dark' ? '#c4b5fd' : '#5124c9'),
-                          bgcolor: (theme) => alpha(theme.palette.primary.main, 0.14),
-                          border: '1px solid',
-                          borderColor: (theme) => alpha(theme.palette.primary.main, 0.3),
-                        }}
-                      />
-                    )}
-                  </Stack>
-                  <Typography sx={{ mt: 0.75, mb: 2, color: 'text.subtle' }}>
-                    {job.period} · {job.place}
-                  </Typography>
+              <Box>
+                <Typography sx={{ fontFamily: mono, fontSize: '0.8rem', color: 'text.secondary' }}>
+                  {job.period}
+                </Typography>
+                <Typography sx={{ fontFamily: mono, fontSize: '0.8rem', color: 'text.subtle', mt: 0.5 }}>
+                  {job.place}
+                </Typography>
+                {isCurrent && (
+                  <Box
+                    sx={{
+                      mt: 2,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 1,
+                      px: 1.25,
+                      py: 0.5,
+                      borderRadius: 999,
+                      border: 1,
+                      borderColor: 'divider',
+                      fontFamily: mono,
+                      fontSize: '0.7rem',
+                      letterSpacing: '0.06em',
+                      textTransform: 'uppercase',
+                      color: 'text.secondary',
+                    }}
+                  >
+                    <span className="pulse" aria-hidden="true" />
+                    Current
+                  </Box>
+                )}
+              </Box>
+
+              <Box>
+                <Typography variant="h3" sx={{ fontSize: { xs: '1.5rem', md: '1.85rem' } }}>
+                  {job.role}{' '}
+                  <Box component="span" sx={{ color: 'text.subtle' }}>
+                    · {job.company}
+                  </Box>
+                </Typography>
+
+                <Box sx={{ mt: 3 }}>
                   <BulletList items={job.bullets} />
-                </CardContent>
-              </Card>
+                </Box>
+
+                <MonoLabel sx={{ mt: 4, mb: 1.25 }}>Stack</MonoLabel>
+                <Stack component="ul" direction="row" useFlexGap sx={{ flexWrap: 'wrap', gap: 0.75, m: 0, p: 0, listStyle: 'none' }}>
+                  {job.stack.map((item) => (
+                    <Box
+                      key={item}
+                      component="li"
+                      sx={{
+                        px: 1.25,
+                        py: 0.5,
+                        borderRadius: 1.5,
+                        bgcolor: 'background.paper',
+                        border: 1,
+                        borderColor: 'divider',
+                        fontSize: '0.8rem',
+                        color: 'text.secondary',
+                      }}
+                    >
+                      {item}
+                    </Box>
+                  ))}
+                </Stack>
+              </Box>
             </Box>
           )
         })}

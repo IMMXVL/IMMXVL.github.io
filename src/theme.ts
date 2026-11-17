@@ -1,4 +1,4 @@
-import { createTheme } from '@mui/material/styles'
+import { alpha, createTheme } from '@mui/material/styles'
 import type { Theme } from './hooks/useTheme'
 
 declare module '@mui/material/styles' {
@@ -7,91 +7,90 @@ declare module '@mui/material/styles' {
   }
 }
 
-const sans = "'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif"
-const display = "'Space Grotesk Variable', " + sans
+export const sans = "'Geist Variable', system-ui, -apple-system, 'Segoe UI', sans-serif"
+export const mono = "'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace"
 
 export function createAppTheme(mode: Theme) {
   const dark = mode === 'dark'
-  const primary = dark ? '#a78bfa' : '#5b2fd6'
-  const secondary = dark ? '#22d3ee' : '#0e7490'
-  const surface = dark ? 'rgb(255 255 255 / 0.035)' : 'rgb(255 255 255 / 0.72)'
-  const surfaceHover = dark ? 'rgb(255 255 255 / 0.06)' : '#ffffff'
-  const border = dark ? 'rgb(255 255 255 / 0.09)' : 'rgb(17 19 27 / 0.09)'
-  const borderStrong = dark ? 'rgb(255 255 255 / 0.18)' : 'rgb(17 19 27 / 0.2)'
-  const gradient = `linear-gradient(120deg, ${primary}, ${secondary})`
+  const ink = dark ? '#ededed' : '#0a0a0a'
+  const canvas = dark ? '#0a0a0a' : '#fafaf9'
+  const raised = dark ? '#111111' : '#ffffff'
+  const accent = dark ? '#ff6b2c' : '#e2470c'
+  const line = dark ? 'rgb(255 255 255 / 0.09)' : 'rgb(10 10 10 / 0.09)'
+  const lineStrong = dark ? 'rgb(255 255 255 / 0.2)' : 'rgb(10 10 10 / 0.22)'
 
   return createTheme({
     palette: {
       mode,
-      primary: { main: primary },
-      secondary: { main: secondary },
-      background: {
-        default: dark ? '#0a0b10' : '#f6f6fa',
-        paper: dark ? '#10121a' : '#ffffff',
-      },
+      primary: { main: accent, contrastText: '#0a0a0a' },
+      secondary: { main: ink },
+      background: { default: canvas, paper: raised },
       text: {
-        primary: dark ? '#eceef4' : '#12141b',
-        secondary: dark ? '#a3aaba' : '#4d5465',
-        subtle: dark ? '#7d8596' : '#636b7c',
+        primary: ink,
+        secondary: dark ? '#a1a1a1' : '#555555',
+        subtle: dark ? '#6f6f6f' : '#8a8a8a',
       },
-      divider: border,
+      divider: line,
     },
     typography: {
       fontFamily: sans,
-      h1: { fontFamily: display, fontWeight: 700, letterSpacing: '-0.045em', lineHeight: 0.98 },
-      h2: { fontFamily: display, fontWeight: 650, letterSpacing: '-0.03em', lineHeight: 1.1 },
-      h3: { fontFamily: display, fontWeight: 600, letterSpacing: '-0.02em', lineHeight: 1.25 },
-      body1: { lineHeight: 1.6 },
+      h1: { fontWeight: 600, letterSpacing: '-0.06em', lineHeight: 0.88 },
+      h2: { fontWeight: 600, letterSpacing: '-0.04em', lineHeight: 1.05 },
+      h3: { fontWeight: 600, letterSpacing: '-0.025em', lineHeight: 1.2 },
+      body1: { lineHeight: 1.65, letterSpacing: '-0.005em' },
       body2: { lineHeight: 1.6 },
-      button: { fontWeight: 600, textTransform: 'none', fontSize: '0.95rem' },
-      overline: { letterSpacing: '0.08em', fontWeight: 600, lineHeight: 1.4 },
+      button: { fontWeight: 550, textTransform: 'none', letterSpacing: '-0.01em' },
+      overline: {
+        fontFamily: mono,
+        fontWeight: 500,
+        fontSize: '0.72rem',
+        letterSpacing: '0.08em',
+        lineHeight: 1.4,
+        textTransform: 'uppercase',
+      },
     },
-    shape: { borderRadius: 18 },
+    // sx borderRadius values are multiples of this: 2 = 8px, 4 = 16px.
+    shape: { borderRadius: 4 },
     components: {
       MuiCssBaseline: {
         styleOverrides: {
           html: { scrollBehavior: 'smooth' },
-          body: { backgroundImage: 'none', lineHeight: 1.6 },
+          body: {
+            backgroundImage: 'none',
+            WebkitFontSmoothing: 'antialiased',
+            fontFeatureSettings: "'ss01', 'cv11'",
+          },
+          '::selection': { background: accent, color: '#0a0a0a' },
         },
       },
       MuiButton: {
+        defaultProps: { disableElevation: true },
         styleOverrides: {
           root: {
-            borderRadius: 999,
-            textTransform: 'none',
-            minHeight: '2.9rem',
-            paddingInline: '1.15rem',
+            borderRadius: 10,
+            minHeight: '2.75rem',
+            paddingInline: '1.1rem',
+            transition: 'background-color .2s, border-color .2s, color .2s, transform .2s',
+            '&:active': { transform: 'translateY(1px)' },
           },
           contained: {
-            border: '1px solid transparent',
-            background: gradient,
-            color: dark ? '#0a0b10' : '#ffffff',
-            boxShadow: `0 10px 30px -12px color-mix(in srgb, ${primary} 70%, transparent)`,
-            '&:hover': {
-              background: gradient,
-              boxShadow: `0 14px 36px -12px color-mix(in srgb, ${primary} 85%, transparent)`,
-            },
+            backgroundColor: ink,
+            color: canvas,
+            '&:hover': { backgroundColor: dark ? '#ffffff' : '#262626' },
           },
           outlined: {
-            borderColor: borderStrong,
-            backgroundColor: surface,
-            color: dark ? '#eceef4' : '#12141b',
-            '&:hover': {
-              borderColor: borderStrong,
-              backgroundColor: surfaceHover,
-              transform: 'translateY(-2px)',
-            },
+            borderColor: line,
+            backgroundColor: raised,
+            color: ink,
+            '&:hover': { borderColor: lineStrong, backgroundColor: raised },
           },
         },
       },
-      MuiCard: {
+      MuiIconButton: {
         styleOverrides: {
           root: {
-            backgroundImage: 'none',
-            borderRadius: 28,
-            backgroundColor: surface,
-            borderColor: border,
-            '&:hover': { borderColor: borderStrong },
+            borderRadius: 10,
+            '&:hover': { backgroundColor: alpha(ink, 0.06) },
           },
         },
       },
@@ -101,12 +100,21 @@ export function createAppTheme(mode: Theme) {
       MuiAppBar: {
         styleOverrides: { root: { backgroundImage: 'none' } },
       },
-      MuiChip: {
+      MuiDialog: {
+        styleOverrides: {
+          paper: {
+            backgroundColor: raised,
+            border: `1px solid ${line}`,
+            borderRadius: 16,
+            boxShadow: dark ? '0 30px 80px rgb(0 0 0 / 0.6)' : '0 30px 80px rgb(10 10 10 / 0.18)',
+          },
+        },
+      },
+      MuiBackdrop: {
         styleOverrides: {
           root: {
-            borderColor: border,
-            backgroundColor: surfaceHover,
-            color: dark ? '#eceef4' : '#12141b',
+            backgroundColor: dark ? 'rgb(0 0 0 / 0.6)' : 'rgb(10 10 10 / 0.25)',
+            backdropFilter: 'blur(4px)',
           },
         },
       },
