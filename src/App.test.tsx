@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
-import { cases, experience, profile } from './data'
+import { experience, profile, projects } from './data'
 
 afterEach(() => {
   delete document.documentElement.dataset.theme
@@ -34,12 +34,23 @@ describe('App', () => {
     }
   })
 
-  it('renders every case study with its outcome', () => {
+  it('lists every project and expands its details', () => {
     render(<App />)
-    for (const item of cases) {
-      expect(screen.getByRole('heading', { level: 3, name: item.title })).toBeInTheDocument()
-      expect(screen.getByText(item.outcome)).toBeInTheDocument()
-    }
+    const section = screen.getByRole('region', { name: 'Projects' })
+    const buttons = within(section).getAllByRole('button', { expanded: false })
+    expect(within(section).getAllByRole('heading', { level: 3 })).toHaveLength(projects.length)
+    expect(within(section).getByRole('button', { name: new RegExp(projects[0].title) })).toHaveAttribute(
+      'aria-expanded',
+      'true',
+    )
+
+    const second = within(section).getByRole('button', { name: new RegExp(projects[1].title) })
+    fireEvent.click(second)
+    expect(second).toHaveAttribute('aria-expanded', 'true')
+    expect(buttons.length).toBe(projects.length - 1)
+
+    fireEvent.click(within(section).getByRole('button', { name: 'Expand all +' }))
+    expect(within(section).getByRole('button', { name: 'Collapse all −' })).toBeInTheDocument()
   })
 
   it('has a skip link to the main content', () => {

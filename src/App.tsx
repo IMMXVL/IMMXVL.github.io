@@ -11,8 +11,8 @@ import { Education } from './components/Education'
 import { Experience } from './components/Experience'
 import { Header } from './components/Header'
 import { Hero } from './components/Hero'
+import { Projects } from './components/Projects'
 import { Skills } from './components/Skills'
-import { Work } from './components/Work'
 import { profile } from './data'
 import { useActiveSection } from './hooks/useActiveSection'
 import { useCopyToClipboard } from './hooks/useCopyToClipboard'
@@ -25,7 +25,7 @@ const currentYear = new Date().getFullYear()
 const sections = [
   { id: 'top', label: 'About' },
   { id: 'experience', label: 'Experience' },
-  { id: 'work', label: 'Selected work' },
+  { id: 'projects', label: 'Projects' },
   { id: 'skills', label: 'Skills' },
   { id: 'education', label: 'Education' },
   { id: 'contact', label: 'Contact' },
@@ -141,7 +141,7 @@ const App = () => {
       <Box component="main" id="main">
         <Hero />
         <Experience />
-        <Work />
+        <Projects />
         <Skills />
         <Education />
         <Contact copied={copied} onCopy={copyEmail} />

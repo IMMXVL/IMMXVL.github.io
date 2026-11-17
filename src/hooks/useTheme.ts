@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useState } from 'react'
 import { flushSync } from 'react-dom'
-import { matchesMedia, prefersReducedMotion } from './media'
+import { prefersReducedMotion } from './media'
 
 export type Theme = 'light' | 'dark'
 
 const STORAGE_KEY = 'theme'
 
-// Keep in sync with the inline script in index.html that sets the theme before first paint.
+// Dark is the default. The inline script in index.html sets the same value before first paint.
 function readInitialTheme(): Theme {
   const current = document.documentElement.dataset.theme
   if (current === 'light' || current === 'dark') return current
-  return matchesMedia('(prefers-color-scheme: light)') ? 'light' : 'dark'
+  return 'dark'
 }
 
 export function useTheme() {
