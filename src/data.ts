@@ -106,7 +106,7 @@ export const projects = [
     stack: ['React', 'Tailwind CSS', 'JavaScript', 'Git'],
   },
   {
-    period: 'Nov 2025 – Dec 2026',
+    period: 'Nov 2025 – Jan 2026',
     type: 'Social platform',
     title: 'Social network for employers and job seekers',
     about:
@@ -118,7 +118,7 @@ export const projects = [
     stack: ['React', 'Material UI', 'Swagger', 'GitHub'],
   },
   {
-    period: 'Mar 2024 – Sep 2025',
+    period: 'Mar 2024 – Oct 2025',
     type: 'Automotive',
     title: 'Car sales website',
     about: 'A website for selling cars online.',
@@ -142,7 +142,7 @@ export const projects = [
     stack: ['React', 'TypeScript', 'Redux', 'Material UI', 'SCSS'],
   },
   {
-    period: 'Feb – Mar 2023',
+    period: 'Feb – Aug 2023',
     type: 'Booking',
     title: 'Reservation platform for premium restaurants',
     about: 'A platform for booking tables at high-end restaurants.',
@@ -152,7 +152,7 @@ export const projects = [
     stack: ['React', 'JavaScript', 'SCSS'],
   },
   {
-    period: 'Nov 2022 – Jul 2023',
+    period: 'Sep 2022 – Jan 2023',
     type: 'E-commerce',
     title: 'E-commerce website and dashboard',
     about: 'An online store with a dashboard for managing it.',
@@ -175,7 +175,7 @@ export const projects = [
     stack: ['Sitefinity', '.NET', 'CSS'],
   },
   {
-    period: 'Jan – May 2022',
+    period: 'May – Jun 2022',
     type: 'Shopify',
     title: 'Product landing pages on Shopify',
     about:
@@ -186,7 +186,7 @@ export const projects = [
     stack: ['Shopify', 'Liquid', 'SCSS', 'JavaScript'],
   },
   {
-    period: 'Dec 2021 – Jun 2022',
+    period: 'Mar – Apr 2022',
     type: 'Fitness',
     title: 'Exercise and workout tracker',
     about: 'An app for tracking exercise and workouts.',
@@ -197,7 +197,7 @@ export const projects = [
     stack: ['React', 'Redux', 'Ant Design', 'JavaScript'],
   },
   {
-    period: 'Dec 2021 – May 2022',
+    period: 'Dec 2021 – Feb 2022',
     type: 'Shopify app',
     title: 'Paid memberships app for Shopify stores',
     about:

@@ -38,7 +38,8 @@ export const Contact = ({ copied, onCopy }: ContactProps) => {
           sx={{ fontSize: { xs: '2.75rem', sm: '4rem', md: '6rem' }, lineHeight: 0.95, letterSpacing: '-0.055em' }}
         >
           Have a role in mind?{' '}
-          <Box component="span" sx={{ color: 'text.subtle', display: { md: 'block' } }}>
+          <Box component="br" sx={{ display: { xs: 'none', md: 'block' } }} />
+          <Box component="span" className="lets-talk" sx={{ color: 'primary.main' }}>
             Let’s talk.
           </Box>
         </Typography>

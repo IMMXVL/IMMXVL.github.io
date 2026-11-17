@@ -186,6 +186,31 @@ section[id] {
   transform: translate(0.15em, -0.15em);
 }
 
+.lets-talk {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 92%;
+  background-size: 0% 0.045em;
+  animation: lets-talk 2.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes lets-talk {
+  0%,
+  12% {
+    background-size: 0% 0.045em;
+    background-position: 0 92%;
+  }
+  42%,
+  68% {
+    background-size: 100% 0.045em;
+    background-position: 0 92%;
+  }
+  100% {
+    background-size: 0% 0.045em;
+    background-position: 100% 92%;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -196,9 +221,14 @@ section[id] {
   .rise > span,
   .fade-in,
   .pulse::after,
-  .arrow-link .arrow {
+  .arrow-link .arrow,
+  .lets-talk {
     transition: none;
     animation: none;
+  }
+
+  .lets-talk {
+    background-size: 100% 0.045em;
   }
 
   .reveal-ready [data-reveal] {
