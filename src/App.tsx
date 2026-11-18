@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -19,6 +19,20 @@ import { useCopyToClipboard } from './hooks/useCopyToClipboard'
 import { useReveal } from './hooks/useReveal'
 import { useTheme } from './hooks/useTheme'
 import { createAppTheme, mono } from './theme'
+
+const TrackerPage = lazy(() => import('./tracker/TrackerPage').then((module) => ({ default: module.TrackerPage })))
+
+const useHash = () => {
+  const [hash, setHash] = useState(() => window.location.hash)
+
+  useEffect(() => {
+    const onChange = () => setHash(window.location.hash)
+    window.addEventListener('hashchange', onChange)
+    return () => window.removeEventListener('hashchange', onChange)
+  }, [])
+
+  return hash
+}
 
 const currentYear = new Date().getFullYear()
 
@@ -100,6 +114,8 @@ const Toast = ({ show, children }: { show: boolean; children: string }) => (
 
 const App = () => {
   const { theme, toggleTheme } = useTheme()
+  const hash = useHash()
+  const trackerOpen = hash === '#applications'
   const activeId = useActiveSection(sectionIds)
   const muiTheme = useMemo(() => createAppTheme(theme), [theme])
   const { copied, copy } = useCopyToClipboard()
@@ -111,6 +127,7 @@ const App = () => {
   }, [copy])
 
   useEffect(() => {
+    if (trackerOpen) return
     const onKeyDown = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
         event.preventDefault()
@@ -119,7 +136,18 @@ const App = () => {
     }
     document.addEventListener('keydown', onKeyDown)
     return () => document.removeEventListener('keydown', onKeyDown)
-  }, [])
+  }, [trackerOpen])
+
+  if (trackerOpen) {
+    return (
+      <ThemeProvider theme={muiTheme}>
+        <CssBaseline />
+        <Suspense fallback={null}>
+          <TrackerPage theme={theme} onToggleTheme={toggleTheme} />
+        </Suspense>
+      </ThemeProvider>
+    )
+  }
 
   return (
     <ThemeProvider theme={muiTheme}>

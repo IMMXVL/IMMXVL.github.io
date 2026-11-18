@@ -6,9 +6,18 @@ import { experience, profile, projects } from './data'
 afterEach(() => {
   delete document.documentElement.dataset.theme
   localStorage.clear()
+  window.location.hash = ''
 })
 
 describe('App', () => {
+  it('keeps the application tracker off the public page', async () => {
+    window.location.hash = '#applications'
+    render(<App />)
+    expect(await screen.findByRole('heading', { name: 'Applications' })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { level: 1, name: profile.name })).not.toBeInTheDocument()
+    expect(screen.getByText(/Firebase under your Google account/)).toBeInTheDocument()
+  })
+
   it('shows the name as the main heading', () => {
     render(<App />)
     expect(screen.getByRole('heading', { level: 1, name: profile.name })).toBeInTheDocument()
